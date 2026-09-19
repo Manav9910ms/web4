@@ -1,0 +1,1 @@
+import{Suspense}from"react";import{BookingForm}from"@/components/booking-form";export default function Book(){return <main className="page"><Suspense fallback={<div className="page-loader">Loading booking…</div>}><BookingForm/></Suspense></main>}

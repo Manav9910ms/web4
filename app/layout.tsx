@@ -1,0 +1,3 @@
+import type{Metadata}from"next";import"./globals.css";import{Header}from"@/components/header";
+export const metadata:Metadata={title:"e-CyberCafe | Digital & Computer Services",description:"Book online forms, printing, scanning, computer time and other cyber cafe services."};
+export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en"><body><Header/>{children}<footer className="site-footer"><div><strong>e-CyberCafe</strong><span>Digital help, without the queue.</span></div><span>© {new Date().getFullYear()} e-CyberCafe</span></footer></body></html>}

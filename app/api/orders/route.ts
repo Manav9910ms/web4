@@ -1,0 +1,3 @@
+import{NextRequest,NextResponse}from"next/server";import{requireUser}from"@/lib/auth";import{adminDb}from"@/lib/firebase-admin";
+const s=(v:any)=>v?.toDate?v.toDate().toISOString():v;
+export async function GET(r:NextRequest){try{const u=await requireUser(r),snap=await adminDb().collection("orders").where("userId","==",u.uid).get(),orders=snap.docs.map(d=>{const x=d.data();return{id:d.id,...x,createdAt:s(x.createdAt),updatedAt:s(x.updatedAt)}}).sort((a,b)=>String(b.createdAt??"").localeCompare(String(a.createdAt??"")));return NextResponse.json(orders)}catch(e){const m=e instanceof Error?e.message:"Request failed";return NextResponse.json({error:m},{status:m==="UNAUTHENTICATED"?401:500})}}

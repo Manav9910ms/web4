@@ -1,0 +1,4 @@
+import{NextRequest,NextResponse}from"next/server";import{getOrCreateProfile,requireUser}from"@/lib/auth";
+function fail(e:unknown){const m=e instanceof Error?e.message:"Request failed";return NextResponse.json({error:m},{status:m==="UNAUTHENTICATED"?401:500})}
+export async function GET(r:NextRequest){try{const u=await requireUser(r);return NextResponse.json(await getOrCreateProfile(u.uid,u.email,u.name))}catch(e){return fail(e)}}
+export async function POST(r:NextRequest){try{const u=await requireUser(r),b=await r.json();return NextResponse.json(await getOrCreateProfile(u.uid,u.email,String(b.name??""),String(b.phone??"")))}catch(e){return fail(e)}}
