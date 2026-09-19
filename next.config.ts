@@ -1,3 +1,9 @@
 import type { NextConfig } from "next";
-const nextConfig: NextConfig = { reactStrictMode: true, poweredByHeader: false };
+
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+  serverExternalPackages: ["firebase-admin"],
+};
+
 export default nextConfig;
