@@ -1,2 +1,53 @@
 rules_version = '2';
-service cloud.firestore { match /databases/{database}/documents { match /{document=**} { allow read, write: if false; } } }
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // Customer profiles:
+    // - Customers may read only their own profile.
+    // - All profile writes remain server-only through Firebase Admin.
+    // - Admins can read profiles for operations.
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create, update, delete: if false;
+    }
+
+    // Orders contain payment and customer information.
+    // They are created/updated only by the trusted Next.js server.
+    // Customers can read only their own orders.
+    // Admins can read all orders and perform no direct browser writes.
+    match /orders/{orderId} {
+      allow read: if signedIn()
+        && (
+          resource.data.userId == request.auth.uid
+          || isAdmin()
+        );
+      allow create, update, delete: if false;
+    }
+
+    // Service catalog is currently server-defined in lib/services.ts.
+    // Keep this closed until services are migrated to Firestore.
+    match /services/{serviceId} {
+      allow read, write: if false;
+    }
+
+    // Default deny for every other collection/document.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
