@@ -1,3 +1,3 @@
-import type{Metadata}from"next";import"./globals.css";import{Header}from"@/components/header";
+import type{Metadata}from"next";import"./globals.css";import Link from"next/link";import{Header}from"@/components/header";
 export const metadata:Metadata={title:"e-CyberCafe | Digital & Computer Services",description:"Book online forms, PF advance, Aadhaar PVC, PAN card and resume services.",icons:{icon:"/favicon.png"}};
-export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en"><body><Header/>{children}<footer className="site-footer"><div><strong>e-CyberCafe</strong><span>Digital help, without the queue.</span></div><span>© {new Date().getFullYear()} e-CyberCafe</span></footer></body></html>}
+export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en"><body><Header/>{children}<footer className="site-footer"><Link href="/" className="footer-brand"><img src="/favicon.png" alt="e-CyberCafe"/><div><strong>e-CyberCafe</strong><span>Digital help, without the queue.</span></div></Link><span>© {new Date().getFullYear()} e-CyberCafe</span></footer></body></html>}
